@@ -12,7 +12,7 @@ if ! type -p asdf >/dev/null; then
     source /opt/asdf-vm/asdf.sh
 fi
 
-languages=("go" "bun" "rust" "lua" )
+languages=("golang" "bun" "rust" "lua", "uv" )
 
 for lang in "${languages[@]}"; do
     u_bold "Installing $lang (latest)..."

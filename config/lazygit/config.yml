@@ -33,6 +33,7 @@ gui:
   mouseEvents: true
   skipDiscardChangeWarning: false
   skipStashWarning: false
+  skipSwitchWorktreeOnCheckoutWarning: false
   showFileTree: true # for rendering changes files in a tree format
   showListFooter: true # for seeing the '5 of 20' message in list panels
   showRandomTip: false
@@ -98,8 +99,8 @@ promptToReturnFromSubprocess: true # display confirmation when subprocess termin
 keybinding:
   universal:
     quit: ","
-    quit-alt1: "<esc>" # alternative/alias of quit
-    return: "q" # return to previous menu, will quit if there's nowhere to return
+    quit-alt1: "q" # alternative/alias of quit
+    return: "<esc>" # return to previous menu, will quit if there's nowhere to return
     quitWithoutChangingDirectory: "<c-c>"
     # togglePanel: "<tab>" # goto the next panel
     prevItem: "k" # go one line up
@@ -206,7 +207,7 @@ keybinding:
     pasteCommits: "p"
     tagCommit: "t"
     checkoutCommit: "<space>"
-    resetCherryPick: "<c-R>"
+    resetCherryPick: "<c-r>"
     copyCommitMessageToClipboard: "<c-y>"
     openLogMenu: "<c-l>"
     viewBisectOptions: "b"
@@ -229,4 +230,20 @@ customCommands:
   - key: "c"
     command: "gitmoji -c"
     context: "files"
+    output: terminal
+  - key: "a"
+    command: "wt switch --create '{{.Form.WorktreeName}}'"
+    context: "worktrees"
+    prompts:
+      - type: "input"
+        title: "New worktree name"
+        key: "WorktreeName"
+    output: terminal
+  - key: "d"
+    command: 'wt remove "{{.SelectedWorktree.Branch}}" --force'
+    context: "worktrees"
+    prompts:
+      - type: "confirm"
+        title: "Remove worktree"
+        body: 'Are you sure you want to remove worktree "{{.SelectedWorktree.Name}}" (branch: {{.SelectedWorktree.Branch}})?'
     output: terminal

@@ -56,6 +56,7 @@ bash modules/psql.sh
 bash modules/ngrok.sh
 bash modules/lazygit.sh
 bash modules/lazydocker.sh
+bash modules/yazi.sh
 
 # Phase 4: Desktop & UI
 u_header "Phase 4: Desktop & UI"

@@ -1,6 +1,9 @@
 export ZSH="$HOME/.oh-my-zsh"
 export FZF_BASE="/$HOME/.fzf/"
 export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
+export ZSH_TMUX_CONFIG="$HOME/.config/tmux/tmux.conf"
+export YAZI_CONFIG_HOME="$HOME/.config/yazi/"
+export COPILOT_GITHUB_TOKEN="$(jq -r '.copilot.githubAccess' ~/.local/share/ai-memory/auth.json)"
 
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
@@ -74,8 +77,7 @@ ZSH_TMUX_AUTOSTART=true
 
 plugins=(
 	fzf
-	tmux
-	sudo
+  tmux
   asdf
 	catimg
 	extract
@@ -106,6 +108,14 @@ if [[ $(id -gn) != "docker" ]]; then
 	exit
 fi
 
+dd() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	command yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
+	command rm -f -- "$tmp"
+}
+
 # Functions
 quit() {
 	exit
@@ -113,64 +123,6 @@ quit() {
 }
 zle -N quit
 
-ff-widget() {
-   ff
-   zle reset-prompt
- }
- zle -N ff-widget
-
-# Function to "Cdback" in zoxide jumps
-dg() {
-    local dirs_output=$(dirs -v)
-    local current_dir=$(pwd)
-    local found_current=false
-    local prev_dir=""
-    
-    while IFS= read -r line; do
-        local dir_path=$(echo "$line" | sed 's/^[[:space:]]*[0-9][0-9]*[[:space:]]*//')
-        
-        if [[ "$dir_path" == "~"* ]]; then
-            dir_path="${dir_path/#\~/$HOME}"
-        fi
-        
-        dir_path=$(cd "$dir_path" 2>/dev/null && pwd)
-        
-        if [[ "$found_current" == true ]]; then
-            prev_dir="$dir_path"
-            break
-        fi
-        
-        if [[ "$dir_path" == "$current_dir" ]]; then
-            found_current=true
-        fi
-    done <<< "$dirs_output"
-    
-    if [[ -n "$prev_dir" && "$prev_dir" != "$current_dir" ]]; then
-        z "$prev_dir"
-    else
-        local current_index=0
-        local target_dir=""
-        
-        while IFS= read -r dir; do
-            if [[ "$dir" == "$current_dir" ]]; then
-                if [[ $current_index -eq 0 ]]; then
-                    target_dir=$(zoxide query -l | sed -n '2p')
-                else
-                    
-                fi
-                break
-            fi
-            target_dir="$dir"
-            ((current_index++))
-        done < <(zoxide query -l)
-        
-        if [[ -n "$target_dir" ]]; then
-            cd "$target_dir" || echo "Failed to cd into $target_dir"
-        else
-            echo "No recent zoxide entries found."
-        fi
-    fi
-}
 
 # Help command to list defined aliases and functions
 help() {
@@ -189,6 +141,26 @@ rmSwap() {
 }
 
 rmSwap
+
+# Show files while cd
+setopt autocd
+chpwd() {
+  exa -GA --color=always --icons --sort=size --group-directories-first
+}
+
+# Lazygit change directory after closing
+gd() {
+  export LAZYGIT_NEW_DIR_FILE=~/.lazygit/newdir
+  lazygit "$@"
+  if [ -f "$LAZYGIT_NEW_DIR_FILE" ]; then
+    # Extrai só o caminho (linhas que começam com /home, /root, etc)
+    NEW_DIR=$(grep -E '^/(home|root|usr|opt|var)' "$LAZYGIT_NEW_DIR_FILE" | head -1 | sed 's/\x1b\[[0-9;]*m//g' | tr -d '\n\r')
+    if [ -n "$NEW_DIR" ] && [ -d "$NEW_DIR" ]; then
+      cd "$NEW_DIR"
+    fi
+    rm -f "$LAZYGIT_NEW_DIR_FILE" > /dev/null
+  fi
+}
 
 # Unmapppings
 bindkey -r '^T'
@@ -263,12 +235,12 @@ alias gnw="sh ~/dotfiles/bin/gnw.sh \$@"
 
 # Zoxide
 alias d="z"
-alias dd="z .."
-alias f="z"
-alias fj='zi'
+alias ds="z .."
 
 # Configurations Files
 alias zshcfg="nvim ~/.zshrc"
+alias tmuxcfg="nvim ~/.config/tmux/tmux.conf"
+alias tcfg="nvim ~/.config/tmux/tmux.conf"
 
 # Apps
 alias nv="nvim"
@@ -287,7 +259,6 @@ alias ni="npm install"
 
 # Pnpm
 alias p="pnpm"
-alias pi="pnpm install"
 alias pa="pnpm run android"
 alias px="pnpm dlx"
 alias pr="pnpm run"
@@ -298,7 +269,6 @@ alias pb="pnpm run build"
 # Git
 alias g="gemini"
 alias gg="lazygit"
-alias gd="sh ~/projects/tmux-lazygit/lazy.sh"
 alias gph="git push"
 alias gpl="git pull"
 alias gco="gitmoji -c"
@@ -333,9 +303,24 @@ alias gwb="./gradlew build"
 alias gwr="./gradlew run"
 alias gwt="./gradlew test"
 
-# System
-alias off="poweroff"
-alias rbt="reboot"
+# Workthrunk
+alias wl="wt list"
+alias ws="wt switch"
+alias wc="wt switch --create"
+alias wd="wt remove --force"
+
+# Supabase
+alias sta="supabase start"
+alias sto="supabase stop"
+alias sss="supabase status"
+
+# bun completions
+alias bd="bun dev"
+alias ba="bun add"
+[ -s "/home/desktop/.bun/_bun" ] && source "/home/desktop/.bun/_bun"
+
+# Oh-my-pi
+alias opm="omp"
 
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
 

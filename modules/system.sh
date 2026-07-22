@@ -13,7 +13,7 @@ yay -S --noconfirm \
     yaml-cpp unzip asdf-vm make gcc xh curl fzf libyaml ripgrep zsh git cmake mesa \
     docker docker-compose docker-machine docker-buildx unixodbc sxhkd gyp \
     bat fakeroot pkgconf neovim fd btop carapace-bin \
-    gnome-tweaks dconf-editor zoxide lazydocker lazygit \
+    gnome-tweaks dconf-editor zoxide lazydocker lazygit yazi \
     antigravity sassc exa
 
 u_success "System base setup complete"

@@ -1,0 +1,35 @@
+[mgr]
+prepend_keymap = [
+    { on = [ "j" ], run = "arrow next", desc = "Next file" },
+    { on = [ "k" ], run = "arrow prev", desc = "Previous file" },
+    { on = [ "l" ], run = "leave", desc = "Back to the parent directory" },
+    { on = [ ";" ], run =  "enter" , desc = "Open a directory or file" },
+    { on = [ "<C-j>" ], run = "open", desc = "Open a file" },
+    { on = [ "f" ], run = "plugin fzf --reverse --bind=ctrl-j:accept,ctrl-q:abort,ctrl-p:backward-delete-char,ctrl-l:up,ctrl-a:beginning-of-line,ctrl-s:end-of-line,ctrl-k:down,ctrl-w:backward-kill-word,ctrl-e:kill-word,ctrl-m:forward-word,ctrl-n:backward-word,tab:toggle", desc = "Jump to a directory/file via fzf" },
+    { on = [ "F" ], run = "plugin zoxide --update_db", desc = "Jump to a directory via zoxide" },
+
+]
+
+[tasks]
+prepend_keymap = [
+    { on = [ "k" ], run = "arrow next", desc = "Next task" },
+    { on = [ "l" ], run = "arrow prev", desc = "Previous task" }
+]
+
+[select]
+prepend_keymap = [
+    { on = [ "k" ], run = "arrow next", desc = "Next option" },
+    { on = [ "l" ], run = "arrow prev", desc = "Previous option" },
+]
+
+[completion]
+prepend_keymap = [
+    { on = [ "k" ], run = "arrow next", desc = "Next line" },
+    { on = [ "l" ], run = "arrow prev", desc = "Previous line" }
+]
+
+[help]
+prepend_keymap = [
+    { on = [ "k" ], run = "arrow next", desc = "Next line" },
+    { on = [ "l" ], run = "arrow prev", desc = "Previous line" }
+]

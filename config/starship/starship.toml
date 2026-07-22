@@ -7,14 +7,44 @@
 # The minimal, blazing-fast, and infinitely customizable prompt
 # https://starship.rs
 
+# format = """
+# $username\
+# $hostname\
+# $directory\
+# $git_branch\
+# $fill\
+# $status\
+# $git_status\
+# $c\
+# $nodejs\
+# $rust\
+# $python\
+# $golang\
+# $lua\
+# $ruby\
+# $shell\
+# $cmake\
+# $conda\
+# $scala\
+# $container\
+# $docker_context\
+# $terraform\
+# $git_state\
+# $jobs\
+# $time\
+# $line_break\
+# $character\
+# $cmd_duration\
+# """
+
 format = """
 $username\
 $hostname\
 $directory\
 $git_branch\
-$fill\
-$status\
-$git_status\
+$character\
+"""
+right_format = """
 $c\
 $nodejs\
 $rust\
@@ -29,12 +59,6 @@ $scala\
 $container\
 $docker_context\
 $terraform\
-$git_state\
-$jobs\
-$time\
-$line_break\
-$character\
-$cmd_duration\
 """
 
 add_newline = false
@@ -44,6 +68,10 @@ format = "[$symbol($version )]($style)"
 
 [nodejs]
 format = "[$symbol($version )]($bold green)"
+
+[bun]
+format = "[$symbol($version )]($style)"
+detect_files = ["bunfig.toml"]
 
 [golang]
 format = "[$symbol($version )]($bold cyan)"
@@ -100,14 +128,14 @@ disabled = true
 [directory]
 read_only = "🔒"
 # home_symbol = "🏠"
-truncation_length = 4
+truncation_length = 2
 truncate_to_repo = false
 style = "bright-black"
 
 [character]
-success_symbol = "[➜](purple)"
-error_symbol = "[➜](red)"
-vicmd_symbol = "[➜](green)"
+success_symbol = "[❯](purple)"
+error_symbol = "[❯](red)"
+vicmd_symbol = "[❯](green)"
 
 [git_metrics]
 disabled = false

@@ -43,5 +43,7 @@
     "terminal.integrated.commandsToSkipShell": [
         "kilo-code.new.agentManagerOpen",
         "kilo-code.new.agentManager.showTerminal"
-    ]
+    ],
+    "git.autofetch": true,
+    "editor.lineNumbers": "off"
 }
