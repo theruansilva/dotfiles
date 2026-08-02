@@ -111,6 +111,10 @@
   background-color: hsl(0, 78%, 60%) !important;
 }
 
+:root:-moz-window-inactive .titlebar-button {
+  background-color: hsl(0, 0%, 40%) !important;
+}
+
 .titlebar-button > image {
   width: 10px !important;
   filter: invert(1) !important;
@@ -123,7 +127,7 @@
   opacity: 1 !important;
 }
 
-#tabbrowser-tabbox:not([sizemode="fullscreen"]) {
+:root:not([sizemode="fullscreen"], [inDOMFullscreen="true"], [inFullscreen="true"]) #tabbrowser-tabbox {
   clip-path: var(--clip-path-squircle-24) !important;
 }
 
@@ -140,6 +144,9 @@
 }
 
 #tabbrowser-tabpanels {
-  border-top-left-radius: 8px !important;
   overflow: hidden;
+}
+
+:root:not([sizemode="fullscreen"], [inDOMFullscreen="true"], [inFullscreen="true"]) #tabbrowser-tabpanels {
+  border-top-left-radius: 8px !important;
 }
